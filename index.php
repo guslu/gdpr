@@ -496,6 +496,40 @@ function esc(string $value): string
             padding: 0 clamp(1rem, 3vw, 2.5rem) 4rem;
         }
 
+        .section-shell {
+            position: relative;
+            margin-top: 2.5rem;
+            border-radius: 34px;
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .section-shell > * {
+            position: relative;
+            z-index: 2;
+        }
+        .section-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 10%, rgba(121, 242, 255, 0.2), transparent 52%),
+                        linear-gradient(170deg, rgba(16, 22, 44, 0.9), rgba(8, 10, 20, 0.95));
+            z-index: 1;
+        }
+        .shell-contrast::before {
+            background: radial-gradient(circle at 82% 12%, rgba(255, 197, 126, 0.25), transparent 46%),
+                        linear-gradient(165deg, rgba(18, 16, 43, 0.92), rgba(12, 7, 20, 0.95));
+        }
+
+        .section-divider {
+            position: relative;
+            margin: 2.2rem 0 .8rem;
+            height: 80px;
+            background: linear-gradient(90deg, rgba(121, 242, 255, 0.28), rgba(210, 151, 255, 0.35), rgba(255, 212, 126, 0.28));
+            opacity: .78;
+        }
+
         .hero {
             min-height: 88vh;
             display: grid;
@@ -513,6 +547,30 @@ function esc(string $value): string
         }
         .hero h1 { font-size: clamp(1.8rem, 4vw, 3.8rem); margin: 0 0 .8rem; line-height: 1.1; }
         .hero p { font-size: clamp(1rem, 1.5vw, 1.2rem); color: var(--muted); max-width: 75ch; }
+
+        .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(.55em);
+            filter: blur(4px);
+            margin-right: .22em;
+            animation: reveal-word .6s var(--easing) forwards;
+            animation-delay: calc(var(--word-index) * 90ms);
+        }
+        .word.cursor::after {
+            content: "|";
+            margin-left: .16em;
+            opacity: .75;
+            animation: blink 1s steps(2, end) infinite;
+        }
+        @keyframes reveal-word {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+        @keyframes blink { 50% { opacity: 0; } }
 
         .chip-row { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.3rem; }
         .chip {
@@ -562,6 +620,15 @@ function esc(string $value): string
         .domain {
             margin-top: 1.2rem;
             overflow: hidden;
+            position: relative;
+        }
+        .domain::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, rgba(121, 242, 255, 0.18), transparent 52%);
+            opacity: .7;
+            pointer-events: none;
         }
         .domain header {
             display: flex;
@@ -575,6 +642,25 @@ function esc(string $value): string
         .domain header h3 { margin: 0; }
         .domain .content { max-height: 0; overflow: hidden; transition: max-height .65s var(--easing), padding .45s var(--easing); padding: 0 1.2rem; }
         .domain.open .content { max-height: 3000px; padding: 0 1.2rem 1.1rem; }
+        .domain:nth-of-type(even) header {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent);
+        }
+        .domain:nth-of-type(odd) header {
+            background: linear-gradient(270deg, rgba(255, 255, 255, 0.05), transparent);
+        }
+
+
+        @supports (mask: radial-gradient(circle, #000, transparent)) {
+            .section-divider {
+                mask: radial-gradient(40px at 15% 40px, transparent 98%, #000) 0 0 / 120px 100% repeat-x;
+            }
+        }
+
+        @supports (background: color-mix(in srgb, white, black)) {
+            .domain::before {
+                background: linear-gradient(145deg, color-mix(in srgb, var(--domain-color, #79f2ff) 28%, transparent), transparent 50%);
+            }
+        }
 
         .framework {
             margin-top: .9rem;
@@ -594,10 +680,12 @@ function esc(string $value): string
 
         .risk-zones {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            grid-template-columns: 1.1fr .9fr;
             gap: 1rem;
         }
         .risk-card { padding: 1rem; border-left: 4px solid #ff688a; }
+        .risk-card:nth-child(3n+1) { transform: translateY(-6px); }
+        .risk-card:nth-child(3n+2) { transform: translateY(8px); }
 
         .matrix-table {
             width: 100%;
@@ -648,6 +736,18 @@ function esc(string $value): string
         @media (max-width: 840px) {
             .checklist { columns: 1; }
             .hero { min-height: auto; padding-top: 2.5rem; }
+            .risk-zones { grid-template-columns: 1fr; }
+            .section-shell { border-radius: 24px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .word,
+            .word.cursor::after {
+                animation: none;
+                opacity: 1;
+                transform: none;
+                filter: none;
+            }
         }
     </style>
 </head>
@@ -671,9 +771,9 @@ function esc(string $value): string
 </nav>
 
 <main class="wrap">
-    <section id="hero" class="hero reveal" aria-labelledby="hero-title">
+    <section id="hero" class="hero reveal section-shell" aria-labelledby="hero-title">
         <div class="hero-card" data-parallax="0.08">
-            <h1 id="hero-title">Komplett juridisk och teknisk web compliance för Sverige 2026</h1>
+            <h1 id="hero-title" data-animated-headline="Komplett juridisk och teknisk web compliance för Sverige 2026">Komplett juridisk och teknisk web compliance för Sverige 2026</h1>
             <p>
                 Denna single-page-resurs samlar nationell svensk rätt, direktverkande EU-regler och de viktigaste digitala
                 regelverken 2024–2026 i ett praktiskt byggperspektiv för webbutvecklare. Fokus ligger på konkreta implementationer,
@@ -691,7 +791,9 @@ function esc(string $value): string
         </div>
     </section>
 
-    <section id="map" class="section reveal" aria-labelledby="map-title">
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section id="map" class="section reveal section-shell shell-contrast" aria-labelledby="map-title">
         <h2 id="map-title">Interaktiv juridisk översiktskarta</h2>
         <p class="lead">Klicka på en domän för att hoppa till detaljerad genomgång med åtgärder, risknivå och ansvar.</p>
         <div class="map-grid">
@@ -704,11 +806,13 @@ function esc(string $value): string
         </div>
     </section>
 
-    <section id="domains" class="section reveal" aria-labelledby="domain-title">
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section id="domains" class="section reveal section-shell" aria-labelledby="domain-title">
         <h2 id="domain-title">Huvudkategorier och underkategorier</h2>
         <p class="lead">Varje regelverk nedan visar <em>vad det är</em>, <em>varför det påverkar utvecklaren</em>, <em>tekniska åtgärder</em> och <em>juridisk risk</em>.</p>
         <?php foreach ($domains as $domain): ?>
-            <article id="<?= esc($domain['id']) ?>" class="domain glass reveal">
+            <article id="<?= esc($domain['id']) ?>" class="domain glass reveal" style="--domain-color: <?= esc($domain['color']) ?>;">
                 <header>
                     <h3><?= esc($domain['title']) ?></h3>
                     <span class="chip" style="border-color: <?= esc($domain['color']) ?>; color: <?= esc($domain['color']) ?>;">Expandera</span>
@@ -735,7 +839,9 @@ function esc(string $value): string
         <?php endforeach; ?>
     </section>
 
-    <section id="riskzones" class="section reveal" aria-labelledby="risk-title">
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section id="riskzones" class="section reveal section-shell shell-contrast" aria-labelledby="risk-title">
         <h2 id="risk-title">Riskzoner (visuellt markerade)</h2>
         <div class="risk-zones">
             <?php foreach ($riskZones as $zone): ?>
@@ -748,7 +854,7 @@ function esc(string $value): string
         </div>
     </section>
 
-    <section id="actions" class="section reveal" aria-labelledby="action-title">
+    <section id="actions" class="section reveal section-shell" aria-labelledby="action-title">
         <h2 id="action-title">Avancerad compliance-nivå: tekniska åtgärdsmönster</h2>
         <div class="glass" style="padding: 1rem 1.2rem;">
             <ul class="tight">
@@ -762,7 +868,7 @@ function esc(string $value): string
         </div>
     </section>
 
-    <section id="agency" class="section reveal" aria-labelledby="agency-title">
+    <section id="agency" class="section reveal section-shell shell-contrast" aria-labelledby="agency-title">
         <h2 id="agency-title">Byrå- och avtalsansvar</h2>
         <div class="glass" style="padding: 1rem 1.2rem;">
             <ul class="tight">
@@ -773,7 +879,7 @@ function esc(string $value): string
         </div>
     </section>
 
-    <section id="matrix" class="section reveal" aria-labelledby="matrix-title">
+    <section id="matrix" class="section reveal section-shell" aria-labelledby="matrix-title">
         <h2 id="matrix-title">Compliance-matris</h2>
         <div class="glass" style="padding: .4rem; overflow-x: auto;">
             <table class="matrix-table">
@@ -799,7 +905,7 @@ function esc(string $value): string
         </div>
     </section>
 
-    <section id="checklist" class="section reveal" aria-labelledby="checklist-title">
+    <section id="checklist" class="section reveal section-shell shell-contrast" aria-labelledby="checklist-title">
         <h2 id="checklist-title">Fullständig utvecklar-checklista</h2>
         <ul class="checklist" aria-label="Utvecklarchecklista">
             <?php foreach ($checklist as $point): ?>
@@ -808,7 +914,7 @@ function esc(string $value): string
         </ul>
     </section>
 
-    <section id="summary" class="section reveal" aria-labelledby="summary-title">
+    <section id="summary" class="section reveal section-shell" aria-labelledby="summary-title">
         <h2 id="summary-title">Visuell sammanfattning av hela regelstrukturen</h2>
         <div class="glass" style="padding: 1rem 1.2rem;">
             <p class="lead">Den praktiska prioriteringsordningen för 2026: <strong>(1) dataskydd + cookies</strong> → <strong>(2) säkerhet/NIS2 + incidentberedskap</strong> → <strong>(3) konsument/e-handel</strong> → <strong>(4) AI/DSA/dataregler</strong> → <strong>(5) tillgänglighet och sektorskrav</strong> → <strong>(6) avtal/IP/licenser</strong>. Alla områden måste dokumenteras med tekniskt bevismaterial.</p>
@@ -843,6 +949,20 @@ function esc(string $value): string
     }, { threshold: 0.12 });
 
     document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
+
+    const animatedHeadline = document.querySelector('[data-animated-headline]');
+    if (animatedHeadline) {
+        const text = animatedHeadline.dataset.animatedHeadline.trim();
+        animatedHeadline.textContent = '';
+        text.split(/\s+/).forEach((word, index, words) => {
+            const span = document.createElement('span');
+            span.className = 'word';
+            if (index === words.length - 1) span.classList.add('cursor');
+            span.style.setProperty('--word-index', String(index));
+            span.textContent = word;
+            animatedHeadline.appendChild(span);
+        });
+    }
 
     // Scroll progress + active nav.
     function onScroll() {
