@@ -392,32 +392,35 @@ function esc(string $value): string
     <title>Sveriges kompletta web compliance-karta 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f5f4f0;
-            --bg-hero: linear-gradient(160deg, #f0eeea 0%, #f8f7f3 50%, #f5f4f0 100%);
+            --bg: #f2f1ed;
             --surface: #ffffff;
-            --ink: #1a1b1a;
-            --muted: #4f4f4f;
-            --border: #e0ddd6;
-            --accent: #0a4d3d;
-            --accent-soft: #e2ebe8;
-            --accent-hover: #083d30;
-            --critical: #a31616;
-            --critical-soft: #fce8e8;
-            --high: #9a4a0a;
-            --high-soft: #fef4e6;
-            --medium: #1552b0;
-            --medium-soft: #e8f0fa;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
-            --shadow-md: 0 4px 6px rgba(0,0,0,.04), 0 12px 24px rgba(0,0,0,.06);
-            --shadow-card: 0 2px 8px rgba(0,0,0,.04);
-            --radius: 14px;
-            --radius-sm: 10px;
+            --ink: #0f0f0f;
+            --muted: #4a4a4a;
+            --border: #ddd9d0;
+            --accent: #047857;
+            --accent-bold: #059669;
+            --accent-deep: #065f46;
+            --accent-soft: #d1fae5;
+            --accent-glow: rgba(5, 150, 105, .35);
+            --bold-block: linear-gradient(135deg, #047857 0%, #059669 40%, #10b981 100%);
+            --critical: #b91c1c;
+            --critical-soft: #fef2f2;
+            --high: #b45309;
+            --high-soft: #fffbeb;
+            --medium: #1d4ed8;
+            --medium-soft: #eff6ff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
+            --shadow-md: 0 8px 24px rgba(0,0,0,.08);
+            --shadow-card: 0 4px 16px rgba(0,0,0,.06);
+            --shadow-glow: 0 0 40px var(--accent-glow);
+            --radius: 16px;
+            --radius-sm: 12px;
             --radius-pill: 999px;
             --easing: cubic-bezier(.25, .46, .45, .94);
-            --space: 0.5rem;
+            --ease-out: cubic-bezier(.33, 1, .68, 1);
         }
 
         * { box-sizing: border-box; }
@@ -427,7 +430,7 @@ function esc(string $value): string
             color: var(--ink);
             font-family: "DM Sans", system-ui, sans-serif;
             font-size: 1.0625rem;
-            line-height: 1.7;
+            line-height: 1.75;
             background: var(--bg);
             overflow-x: hidden;
         }
@@ -436,9 +439,9 @@ function esc(string $value): string
             position: fixed;
             inset: 0;
             z-index: -1;
-            background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,.028) 1px, transparent 0);
-            background-size: 28px 28px;
-            opacity: .5;
+            background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,.04) 1px, transparent 0);
+            background-size: 32px 32px;
+            opacity: .6;
         }
 
         .preloader {
@@ -466,10 +469,11 @@ function esc(string $value): string
             top: 0;
             left: 0;
             width: 0;
-            height: 4px;
+            height: 5px;
             z-index: 1200;
-            background: linear-gradient(90deg, var(--accent), #0d7a62);
-            transition: width .12s linear;
+            background: var(--bold-block);
+            box-shadow: 0 0 20px var(--accent-glow);
+            transition: width .12s var(--easing);
         }
 
         .nav {
@@ -491,12 +495,13 @@ function esc(string $value): string
             gap: 1rem;
         }
         .nav-brand {
-            font-family: "Fraunces", Georgia, serif;
-            font-weight: 600;
-            font-size: 1rem;
+            font-family: "Syne", "Fraunces", sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
             color: var(--ink);
             text-decoration: none;
-            letter-spacing: -.01em;
+            letter-spacing: -.02em;
+            transition: color .2s;
         }
         .nav-brand:hover { color: var(--accent); }
         .nav ul {
@@ -524,7 +529,8 @@ function esc(string $value): string
         }
         .nav a.active {
             color: #fff;
-            background: var(--accent);
+            background: var(--bold-block);
+            box-shadow: 0 4px 14px rgba(4, 120, 87, .4);
         }
         .nav a:focus-visible {
             outline: 2px solid var(--accent);
@@ -534,25 +540,25 @@ function esc(string $value): string
         .wrap {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 clamp(1.75rem, 4vw, 2.5rem);
         }
 
         .section {
-            padding: clamp(3.5rem, 9vw, 6rem) 0;
+            padding: clamp(4rem, 10vw, 7rem) 0;
         }
         .section:nth-of-type(even) {
-            background: rgba(255,255,255,.5);
+            background: rgba(255,255,255,.6);
         }
         .section-head {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
         .section-label {
             font-size: .7rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: .14em;
+            letter-spacing: .18em;
             color: var(--accent);
-            margin-bottom: .6rem;
+            margin-bottom: .75rem;
         }
         h1, h2, h3, h4 {
             font-family: "Fraunces", Georgia, serif;
@@ -561,116 +567,160 @@ function esc(string $value): string
             color: var(--ink);
         }
         h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 1.25rem;
-            letter-spacing: -.02em;
+            font-family: "Syne", "Fraunces", sans-serif;
+            font-size: clamp(2.25rem, 5.5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            letter-spacing: -.03em;
         }
         h2 {
-            font-size: clamp(1.6rem, 3vw, 2.35rem);
-            font-weight: 600;
-            margin-bottom: .6rem;
-            letter-spacing: -.01em;
+            font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+            font-weight: 700;
+            margin-bottom: .75rem;
+            letter-spacing: -.02em;
         }
-        h3 { font-size: 1.3rem; font-weight: 600; }
-        h4 { font-size: 1.08rem; font-weight: 600; }
-        p { margin: 0 0 1.1rem; }
+        h3 { font-size: 1.35rem; font-weight: 600; }
+        h4 { font-size: 1.1rem; font-weight: 600; }
+        p { margin: 0 0 1.25rem; }
         .lead {
             max-width: 68ch;
             color: var(--muted);
-            font-size: 1.125rem;
-            line-height: 1.65;
+            font-size: 1.15rem;
+            line-height: 1.7;
         }
 
         .hero {
-            padding-top: clamp(3.5rem, 12vw, 6rem);
-            padding-bottom: clamp(3.5rem, 10vw, 6rem);
-            background: var(--bg-hero);
+            padding-top: clamp(4rem, 14vw, 8rem);
+            padding-bottom: clamp(4rem, 12vw, 7rem);
+            position: relative;
+            overflow: hidden;
         }
-        .hero .section-label { margin-bottom: .75rem; }
-        .hero-card { max-width: 44rem; }
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 420px;
+            background: var(--bold-block);
+            opacity: .12;
+            z-index: 0;
+            animation: heroGradient 12s ease-in-out infinite alternate;
+        }
+        @keyframes heroGradient {
+            0% { opacity: .08; transform: scale(1) rotate(0deg); }
+            100% { opacity: .14; transform: scale(1.05) rotate(1deg); }
+        }
+        .hero .wrap { position: relative; z-index: 1; }
+        .hero .section-label {
+            margin-bottom: 1rem;
+            color: var(--accent-deep);
+            font-weight: 800;
+        }
+        .hero-card {
+            max-width: 50rem;
+            position: relative;
+        }
+        .hero-year {
+            position: absolute;
+            top: -0.35em;
+            right: 0;
+            font-family: "Syne", sans-serif;
+            font-size: clamp(4rem, 18vw, 11rem);
+            font-weight: 800;
+            line-height: 1;
+            color: var(--accent);
+            opacity: .22;
+            letter-spacing: -.04em;
+            pointer-events: none;
+        }
         .chip-row {
             display: flex;
             flex-wrap: wrap;
-            gap: .5rem;
-            margin: 1.75rem 0 1.25rem;
+            gap: .65rem;
+            margin: 2rem 0 1.5rem;
         }
         .chip {
             display: inline-flex;
             align-items: center;
-            padding: .4rem .85rem;
+            padding: .5rem 1rem;
             border-radius: var(--radius-pill);
             background: var(--surface);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             color: var(--ink);
-            font-size: .8125rem;
-            font-weight: 500;
+            font-size: .875rem;
+            font-weight: 600;
             box-shadow: var(--shadow-sm);
-            transition: border-color .2s, box-shadow .2s;
+            transition: border-color .25s, box-shadow .25s, transform .25s var(--easing);
         }
         .chip:hover {
             border-color: var(--accent);
             box-shadow: var(--shadow-card);
+            transform: translateY(-2px);
         }
 
         .map-grid,
         .risk-zones {
             display: grid;
-            gap: 1.25rem;
+            gap: 1.5rem;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            margin-top: 1.75rem;
+            margin-top: 2rem;
         }
         .map-node {
             display: block;
-            padding: 1.5rem;
+            padding: 1.75rem 1.75rem;
             background: var(--surface);
             border-radius: var(--radius);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             box-shadow: var(--shadow-card);
             text-decoration: none;
             color: inherit;
-            transition: box-shadow .25s var(--easing), border-color .25s, transform .25s var(--easing);
-            border-left: 5px solid var(--node-color, var(--accent));
+            transition: opacity .6s var(--easing), transform .5s var(--ease-out), box-shadow .35s var(--easing), border-color .3s;
+            border-left: 6px solid var(--node-color, var(--accent));
             position: relative;
         }
         .map-node::after {
             content: "→";
             position: absolute;
-            right: 1.25rem;
+            right: 1.5rem;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 1.1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--border);
-            transition: color .2s, transform .2s;
+            transition: color .3s, transform .3s var(--easing);
         }
         .map-node:hover {
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-md), 0 0 0 1px var(--node-color, var(--accent));
             border-left-color: var(--node-color, var(--accent));
-            transform: translateY(-3px);
+            transform: translateY(-5px);
         }
         .map-node:hover::after {
             color: var(--node-color, var(--accent));
-            transform: translateY(-50%) translateX(4px);
+            transform: translateY(-50%) translateX(6px);
         }
-        .map-node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-        .map-node h3 { margin-bottom: .5rem; padding-right: 1.5rem; }
+        .map-node:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+        .map-node h3 { margin-bottom: .6rem; padding-right: 2rem; }
         .map-node p {
             margin: 0;
             font-size: .9375rem;
             color: var(--muted);
-            line-height: 1.55;
+            line-height: 1.6;
         }
 
         .risk-card {
-            padding: 1.5rem;
+            padding: 1.75rem 1.75rem;
             background: var(--surface);
             border-radius: var(--radius);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             box-shadow: var(--shadow-card);
-            transition: box-shadow .25s var(--easing), border-color .2s;
+            transition: opacity .6s var(--easing), transform .5s var(--ease-out), box-shadow .35s var(--easing);
         }
-        .risk-card:hover { box-shadow: var(--shadow-md); }
-        .risk-card h3 { margin-bottom: .5rem; }
+        .risk-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        .risk-card h3 { margin-bottom: .6rem; }
         .risk-impact {
             display: inline-block;
             margin-bottom: .6rem;
@@ -685,28 +735,28 @@ function esc(string $value): string
         .risk-impact-kritisk { background: var(--critical-soft); color: var(--critical); }
 
         .domain {
-            margin-top: 1.5rem;
+            margin-top: 1.75rem;
             background: var(--surface);
             border-radius: var(--radius);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             box-shadow: var(--shadow-card);
             overflow: hidden;
-            border-left: 5px solid var(--domain-color, var(--accent));
+            border-left: 6px solid var(--domain-color, var(--accent));
         }
         .domain > header {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-            padding: 1.25rem 1.5rem;
+            gap: 1.25rem;
+            padding: 1.5rem 1.75rem;
             cursor: pointer;
-            transition: background .2s;
+            transition: background .25s;
         }
-        .domain > header:hover { background: rgba(0,0,0,.015); }
+        .domain > header:hover { background: rgba(0,0,0,.02); }
         .domain .content {
-            padding: 0 1.5rem 1.5rem;
-            border-top: 1px solid var(--border);
+            padding: 0 1.75rem 1.75rem;
+            border-top: 2px solid var(--border);
         }
         .domain.open .content { display: block; }
         .domain:not(.open) .content { display: none; }
@@ -732,7 +782,7 @@ function esc(string $value): string
         }
 
         .framework {
-            padding: 1.35rem 0;
+            padding: 1.6rem 0;
             margin-bottom: 0;
             border-bottom: 1px solid var(--border);
         }
@@ -783,13 +833,13 @@ function esc(string $value): string
         .section-divider { display: none; }
 
         .card {
-            padding: 1.5rem 1.75rem;
+            padding: 1.75rem 2rem;
             background: var(--surface);
             border-radius: var(--radius);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             box-shadow: var(--shadow-card);
         }
-        .card .tight { margin-top: .6rem; }
+        .card .tight { margin-top: .75rem; }
 
         .matrix-wrap {
             overflow-x: auto;
@@ -805,7 +855,7 @@ function esc(string $value): string
         }
         .matrix-table th,
         .matrix-table td {
-            padding: 1rem 1.25rem;
+            padding: 1.15rem 1.5rem;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -822,33 +872,34 @@ function esc(string $value): string
         .checklist {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1rem;
+            gap: 1.25rem;
             list-style: none;
-            margin: 1.5rem 0 0;
+            margin: 2rem 0 0;
             padding: 0;
         }
         .checklist li {
-            padding: 1.15rem 1.25rem 1.15rem 3rem;
+            padding: 1.35rem 1.5rem 1.35rem 3.25rem;
             background: var(--surface);
             border-radius: var(--radius);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             position: relative;
             font-size: .9375rem;
-            line-height: 1.6;
+            line-height: 1.65;
             box-shadow: var(--shadow-sm);
-            transition: box-shadow .2s, border-color .2s;
+            transition: box-shadow .3s var(--easing), border-color .3s, transform .3s var(--easing);
         }
         .checklist li:hover {
             box-shadow: var(--shadow-card);
             border-color: var(--accent);
+            transform: translateX(4px);
         }
         .checklist li::before {
             content: "✓";
             position: absolute;
-            left: 1rem;
-            top: 1.15rem;
-            width: 1.5rem;
-            height: 1.5rem;
+            left: 1.15rem;
+            top: 1.35rem;
+            width: 1.6rem;
+            height: 1.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -859,25 +910,58 @@ function esc(string $value): string
             border-radius: 50%;
         }
 
+        .accent-bar {
+            height: 6px;
+            background: var(--bold-block);
+            margin: 0;
+        }
+
         footer {
-            margin-top: 4rem;
-            padding: 3rem 0;
+            margin-top: 0;
+            padding: 3.5rem 0;
             background: var(--ink);
             color: #9ca3af;
         }
-        footer .wrap { padding: 0 1.5rem; }
+        footer .wrap { padding: 0 clamp(1.75rem, 4vw, 2.5rem); }
         footer p { margin: 0; font-size: .9375rem; line-height: 1.65; }
 
         .reveal {
             opacity: 0;
-            transform: translateY(14px);
-            transition: opacity .5s var(--easing), transform .5s var(--easing);
+            transform: translateY(24px);
+            transition: opacity .6s var(--easing), transform .6s var(--easing);
         }
         .reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
-
+        .map-grid .map-node.reveal { opacity: 0; transform: translateY(24px); }
+        .map-grid .map-node.reveal.visible { opacity: 1; transform: translateY(0); }
+        .map-grid .map-node:nth-child(1) { transition-delay: 0ms; }
+        .map-grid .map-node:nth-child(2) { transition-delay: 80ms; }
+        .map-grid .map-node:nth-child(3) { transition-delay: 160ms; }
+        .map-grid .map-node:nth-child(4) { transition-delay: 240ms; }
+        .map-grid .map-node:nth-child(5) { transition-delay: 320ms; }
+        .map-grid .map-node:nth-child(6) { transition-delay: 400ms; }
+        .risk-zones .risk-card.reveal { opacity: 0; transform: translateY(24px); }
+        .risk-zones .risk-card.reveal.visible { opacity: 1; transform: translateY(0); }
+        .risk-zones .risk-card:nth-child(1) { transition-delay: 0ms; }
+        .risk-zones .risk-card:nth-child(2) { transition-delay: 90ms; }
+        .risk-zones .risk-card:nth-child(3) { transition-delay: 180ms; }
+        .risk-zones .risk-card:nth-child(4) { transition-delay: 270ms; }
+        .risk-zones .risk-card:nth-child(5) { transition-delay: 360ms; }
+        .checklist li { opacity: 0; transform: translateX(-12px); transition: opacity .5s var(--easing), transform .5s var(--easing); }
+        .section.reveal.visible .checklist li { opacity: 1; transform: translateX(0); }
+        .checklist li:nth-child(1) { transition-delay: 0ms; }
+        .checklist li:nth-child(2) { transition-delay: 40ms; }
+        .checklist li:nth-child(3) { transition-delay: 80ms; }
+        .checklist li:nth-child(4) { transition-delay: 120ms; }
+        .checklist li:nth-child(5) { transition-delay: 160ms; }
+        .checklist li:nth-child(6) { transition-delay: 200ms; }
+        .checklist li:nth-child(7) { transition-delay: 240ms; }
+        .checklist li:nth-child(8) { transition-delay: 280ms; }
+        .checklist li:nth-child(9) { transition-delay: 320ms; }
+        .checklist li:nth-child(10) { transition-delay: 360ms; }
+        .checklist li:nth-child(n+11) { transition-delay: 400ms; }
         .word {
             opacity: 0;
             display: inline-block;
@@ -912,6 +996,8 @@ function esc(string $value): string
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
             .reveal { opacity: 1; transform: none; }
+            .map-grid .map-node.reveal, .risk-zones .risk-card.reveal { opacity: 1; transform: none; }
+            .checklist li { opacity: 1; transform: none; }
             html { scroll-behavior: auto; }
         }
     </style>
@@ -941,6 +1027,7 @@ function esc(string $value): string
     <section id="hero" class="section hero reveal" aria-labelledby="hero-title">
         <div class="wrap">
             <div class="hero-card" data-parallax="0.08">
+                <span class="hero-year" aria-hidden="true">2026</span>
                 <p class="section-label">Web compliance 2026</p>
                 <h1 id="hero-title" data-animated-headline="Komplett juridisk och teknisk web compliance för Sverige 2026">Komplett juridisk och teknisk web compliance för Sverige 2026</h1>
             <p>
@@ -972,7 +1059,7 @@ function esc(string $value): string
             </div>
             <div class="map-grid">
             <?php foreach ($domains as $domain): ?>
-                <a class="map-node" href="#<?= esc($domain['id']) ?>" style="--node-color: <?= esc($domain['color']) ?>; text-decoration:none; color: inherit;">
+                <a class="map-node reveal" href="#<?= esc($domain['id']) ?>" style="--node-color: <?= esc($domain['color']) ?>; text-decoration:none; color: inherit;">
                     <h3><?= esc($domain['title']) ?></h3>
                     <p><?= esc($domain['summary']) ?></p>
                 </a>
@@ -1026,7 +1113,7 @@ function esc(string $value): string
             </div>
             <div class="risk-zones">
             <?php foreach ($riskZones as $zone): ?>
-                <article class="risk-card">
+                <article class="risk-card reveal">
                     <span class="risk-impact risk-impact-<?= strtolower($zone['impact']) === 'kritisk' ? 'kritisk' : 'high' ?>"><?= esc($zone['impact']) ?></span>
                     <h3><?= esc($zone['title']) ?></h3>
                     <p><?= esc($zone['detail']) ?></p>
@@ -1128,6 +1215,7 @@ function esc(string $value): string
         </div>
     </section>
 
+    <div class="accent-bar" aria-hidden="true"></div>
     <footer>
         <div class="wrap">
         <p>Detta är ett arbetsverktyg för utvecklingsteam, jurister och byråer i svenska kundprojekt 2026. Bedöm alltid kundens branschspecifika krav (t.ex. vård, finans, offentlig sektor, edtech, medtech, kritisk infrastruktur) innan go-live.</p>
