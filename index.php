@@ -395,24 +395,29 @@ function esc(string $value): string
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f6f5f1;
+            --bg: #f5f4f0;
+            --bg-hero: linear-gradient(160deg, #f0eeea 0%, #f8f7f3 50%, #f5f4f0 100%);
             --surface: #ffffff;
-            --ink: #1a1a1a;
-            --muted: #5c5c5c;
-            --border: #e2e0da;
-            --accent: #0d5c4a;
-            --accent-soft: #e8f2ef;
-            --critical: #b91c1c;
-            --critical-soft: #fef2f2;
-            --high: #b45309;
-            --high-soft: #fffbeb;
-            --medium: #1d4ed8;
-            --medium-soft: #eff6ff;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
-            --shadow-md: 0 4px 12px rgba(0,0,0,.08);
-            --radius: 12px;
-            --radius-sm: 8px;
+            --ink: #1a1b1a;
+            --muted: #4f4f4f;
+            --border: #e0ddd6;
+            --accent: #0a4d3d;
+            --accent-soft: #e2ebe8;
+            --accent-hover: #083d30;
+            --critical: #a31616;
+            --critical-soft: #fce8e8;
+            --high: #9a4a0a;
+            --high-soft: #fef4e6;
+            --medium: #1552b0;
+            --medium-soft: #e8f0fa;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.04);
+            --shadow-md: 0 4px 6px rgba(0,0,0,.04), 0 12px 24px rgba(0,0,0,.06);
+            --shadow-card: 0 2px 8px rgba(0,0,0,.04);
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-pill: 999px;
             --easing: cubic-bezier(.25, .46, .45, .94);
+            --space: 0.5rem;
         }
 
         * { box-sizing: border-box; }
@@ -421,10 +426,19 @@ function esc(string $value): string
             margin: 0;
             color: var(--ink);
             font-family: "DM Sans", system-ui, sans-serif;
-            font-size: 1rem;
-            line-height: 1.65;
+            font-size: 1.0625rem;
+            line-height: 1.7;
             background: var(--bg);
             overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,.028) 1px, transparent 0);
+            background-size: 28px 28px;
+            opacity: .5;
         }
 
         .preloader {
@@ -452,51 +466,69 @@ function esc(string $value): string
             top: 0;
             left: 0;
             width: 0;
-            height: 3px;
+            height: 4px;
             z-index: 1200;
-            background: var(--accent);
-            transition: width .1s linear;
+            background: linear-gradient(90deg, var(--accent), #0d7a62);
+            transition: width .12s linear;
         }
 
         .nav {
             position: sticky;
             top: 0;
             z-index: 1100;
-            background: rgba(255,255,255,.92);
+            background: rgba(255,255,255,.94);
             border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         .nav-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: .75rem 1.5rem;
+            padding: .85rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
         }
+        .nav-brand {
+            font-family: "Fraunces", Georgia, serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--ink);
+            text-decoration: none;
+            letter-spacing: -.01em;
+        }
+        .nav-brand:hover { color: var(--accent); }
         .nav ul {
             list-style: none;
             margin: 0;
             padding: 0;
             display: flex;
             flex-wrap: wrap;
-            gap: .35rem;
+            gap: .25rem;
         }
         .nav a {
             display: inline-block;
-            padding: .5rem .85rem;
-            border-radius: var(--radius-sm);
+            padding: .5rem .9rem;
+            border-radius: var(--radius-pill);
             color: var(--muted);
             text-decoration: none;
-            font-size: .9rem;
+            font-size: .875rem;
             font-weight: 500;
             white-space: nowrap;
-            transition: color .2s, background .2s;
+            transition: color .2s, background .2s, box-shadow .2s;
         }
         .nav a:hover {
             color: var(--accent);
             background: var(--accent-soft);
         }
         .nav a.active {
-            color: var(--accent);
-            background: var(--accent-soft);
+            color: #fff;
+            background: var(--accent);
+        }
+        .nav a:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
         .wrap {
@@ -506,122 +538,160 @@ function esc(string $value): string
         }
 
         .section {
-            padding: clamp(3rem, 8vw, 5rem) 0;
+            padding: clamp(3.5rem, 9vw, 6rem) 0;
         }
         .section:nth-of-type(even) {
-            background: rgba(0,0,0,.02);
+            background: rgba(255,255,255,.5);
         }
         .section-head {
-            margin-bottom: 1.75rem;
+            margin-bottom: 2rem;
         }
         .section-label {
-            font-size: .75rem;
+            font-size: .7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: .12em;
+            letter-spacing: .14em;
             color: var(--accent);
-            margin-bottom: .5rem;
+            margin-bottom: .6rem;
         }
         h1, h2, h3, h4 {
             font-family: "Fraunces", Georgia, serif;
-            line-height: 1.25;
+            line-height: 1.2;
             margin-top: 0;
             color: var(--ink);
         }
         h1 {
-            font-size: clamp(1.85rem, 4.5vw, 3.25rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: -.02em;
         }
         h2 {
-            font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+            font-size: clamp(1.6rem, 3vw, 2.35rem);
             font-weight: 600;
-            margin-bottom: .5rem;
+            margin-bottom: .6rem;
+            letter-spacing: -.01em;
         }
-        h3 { font-size: 1.25rem; font-weight: 600; }
-        h4 { font-size: 1.05rem; font-weight: 600; }
-        p { margin: 0 0 1rem; }
+        h3 { font-size: 1.3rem; font-weight: 600; }
+        h4 { font-size: 1.08rem; font-weight: 600; }
+        p { margin: 0 0 1.1rem; }
         .lead {
-            max-width: 70ch;
+            max-width: 68ch;
             color: var(--muted);
-            font-size: 1.1rem;
+            font-size: 1.125rem;
+            line-height: 1.65;
         }
 
         .hero {
-            padding-top: clamp(3rem, 10vw, 5rem);
-            padding-bottom: clamp(3rem, 8vw, 5rem);
+            padding-top: clamp(3.5rem, 12vw, 6rem);
+            padding-bottom: clamp(3.5rem, 10vw, 6rem);
+            background: var(--bg-hero);
         }
-        .hero-card { max-width: 42rem; }
+        .hero .section-label { margin-bottom: .75rem; }
+        .hero-card { max-width: 44rem; }
         .chip-row {
             display: flex;
             flex-wrap: wrap;
             gap: .5rem;
-            margin: 1.5rem 0 1rem;
+            margin: 1.75rem 0 1.25rem;
         }
         .chip {
             display: inline-flex;
             align-items: center;
-            padding: .35rem .75rem;
-            border-radius: 999px;
+            padding: .4rem .85rem;
+            border-radius: var(--radius-pill);
             background: var(--surface);
             border: 1px solid var(--border);
             color: var(--ink);
-            font-size: .85rem;
+            font-size: .8125rem;
             font-weight: 500;
             box-shadow: var(--shadow-sm);
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .chip:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-card);
         }
 
         .map-grid,
         .risk-zones {
             display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            margin-top: 1.5rem;
+            gap: 1.25rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            margin-top: 1.75rem;
         }
         .map-node {
             display: block;
-            padding: 1.25rem;
+            padding: 1.5rem;
             background: var(--surface);
             border-radius: var(--radius);
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-card);
             text-decoration: none;
             color: inherit;
-            transition: box-shadow .2s, border-color .2s, transform .2s;
-            border-left: 4px solid var(--node-color, var(--accent));
+            transition: box-shadow .25s var(--easing), border-color .25s, transform .25s var(--easing);
+            border-left: 5px solid var(--node-color, var(--accent));
+            position: relative;
+        }
+        .map-node::after {
+            content: "→";
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: var(--border);
+            transition: color .2s, transform .2s;
         }
         .map-node:hover {
             box-shadow: var(--shadow-md);
-            border-color: var(--node-color, var(--accent));
-            transform: translateY(-2px);
+            border-left-color: var(--node-color, var(--accent));
+            transform: translateY(-3px);
         }
-        .map-node h3 { margin-bottom: .4rem; }
+        .map-node:hover::after {
+            color: var(--node-color, var(--accent));
+            transform: translateY(-50%) translateX(4px);
+        }
+        .map-node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .map-node h3 { margin-bottom: .5rem; padding-right: 1.5rem; }
         .map-node p {
             margin: 0;
-            font-size: .9rem;
+            font-size: .9375rem;
             color: var(--muted);
-            line-height: 1.5;
+            line-height: 1.55;
         }
 
         .risk-card {
-            padding: 1.25rem;
+            padding: 1.5rem;
             background: var(--surface);
             border-radius: var(--radius);
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: box-shadow .2s;
+            box-shadow: var(--shadow-card);
+            transition: box-shadow .25s var(--easing), border-color .2s;
         }
         .risk-card:hover { box-shadow: var(--shadow-md); }
         .risk-card h3 { margin-bottom: .5rem; }
+        .risk-impact {
+            display: inline-block;
+            margin-bottom: .6rem;
+            padding: .25rem .6rem;
+            border-radius: var(--radius-sm);
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+        .risk-impact-high { background: var(--high-soft); color: var(--high); }
+        .risk-impact-kritisk { background: var(--critical-soft); color: var(--critical); }
 
         .domain {
             margin-top: 1.5rem;
             background: var(--surface);
             border-radius: var(--radius);
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
-            border-left: 4px solid var(--domain-color, var(--accent));
+            border-left: 5px solid var(--domain-color, var(--accent));
         }
         .domain > header {
             display: flex;
@@ -629,68 +699,82 @@ function esc(string $value): string
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
-            padding: 1.1rem 1.25rem;
+            padding: 1.25rem 1.5rem;
             cursor: pointer;
             transition: background .2s;
         }
-        .domain > header:hover { background: rgba(0,0,0,.02); }
+        .domain > header:hover { background: rgba(0,0,0,.015); }
         .domain .content {
-            padding: 0 1.25rem 1.25rem;
+            padding: 0 1.5rem 1.5rem;
             border-top: 1px solid var(--border);
         }
         .domain.open .content { display: block; }
         .domain:not(.open) .content { display: none; }
         .domain-toggle {
-            padding: .4rem .75rem;
+            padding: .5rem 1rem;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border);
             background: var(--surface);
             color: var(--muted);
-            font-size: .85rem;
+            font-size: .875rem;
             font-weight: 500;
             cursor: pointer;
-            transition: border-color .2s, color .2s;
+            transition: border-color .2s, color .2s, background .2s;
         }
         .domain-toggle:hover {
             border-color: var(--domain-color, var(--accent));
             color: var(--domain-color, var(--accent));
+            background: var(--accent-soft);
+        }
+        .domain-toggle:focus-visible {
+            outline: 2px solid var(--domain-color, var(--accent));
+            outline-offset: 2px;
         }
 
         .framework {
-            padding: 1.1rem 0;
+            padding: 1.35rem 0;
             margin-bottom: 0;
             border-bottom: 1px solid var(--border);
         }
         .framework:last-child { border-bottom: none; padding-bottom: 0; }
-        .framework h4 { margin-bottom: .6rem; }
+        .framework h4 {
+            margin-bottom: .75rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: .5rem;
+        }
         .meta {
             display: grid;
-            gap: .35rem;
+            gap: .4rem;
             color: var(--muted);
-            font-size: .9rem;
-            margin-bottom: .75rem;
+            font-size: .9375rem;
+            margin-bottom: .85rem;
         }
         .tight {
-            margin: .5rem 0 0;
-            padding-left: 1.25rem;
-            font-size: .95rem;
+            margin: .6rem 0 0;
+            padding-left: 1.35rem;
+            font-size: .9375rem;
+            line-height: 1.6;
         }
-        .tight li { margin-bottom: .35rem; }
+        .tight li { margin-bottom: .4rem; }
         .risk {
-            margin: .75rem 0 0;
-            padding: .65rem .85rem;
+            margin: .85rem 0 0;
+            padding: .85rem 1rem;
             background: var(--critical-soft);
             border-radius: var(--radius-sm);
-            color: #991b1b;
-            font-size: .9rem;
+            color: #7f1d1d;
+            font-size: .9375rem;
+            border-left: 3px solid var(--critical);
         }
         .level-badge {
             display: inline-block;
-            padding: .2rem .5rem;
-            border-radius: 4px;
+            padding: .25rem .55rem;
+            border-radius: 6px;
             font-size: .7rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: .04em;
         }
         .level-critical { background: var(--critical-soft); color: var(--critical); }
         .level-high { background: var(--high-soft); color: var(--high); }
@@ -699,20 +783,20 @@ function esc(string $value): string
         .section-divider { display: none; }
 
         .card {
-            padding: 1.25rem 1.5rem;
+            padding: 1.5rem 1.75rem;
             background: var(--surface);
             border-radius: var(--radius);
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-card);
         }
-        .card .tight { margin-top: .5rem; }
+        .card .tight { margin-top: .6rem; }
 
         .matrix-wrap {
             overflow-x: auto;
             border-radius: var(--radius);
             border: 1px solid var(--border);
             background: var(--surface);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-card);
         }
         .matrix-table {
             width: 100%;
@@ -721,7 +805,7 @@ function esc(string $value): string
         }
         .matrix-table th,
         .matrix-table td {
-            padding: .85rem 1rem;
+            padding: 1rem 1.25rem;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -729,52 +813,60 @@ function esc(string $value): string
             background: var(--accent-soft);
             color: var(--accent);
             font-weight: 600;
-            font-size: .9rem;
+            font-size: .875rem;
         }
-        .matrix-table tbody tr:hover { background: rgba(0,0,0,.02); }
+        .matrix-table tbody tr:nth-child(even) { background: rgba(0,0,0,.015); }
+        .matrix-table tbody tr:hover { background: var(--accent-soft); }
         .matrix-table tbody tr:last-child td { border-bottom: none; }
 
         .checklist {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: .85rem;
+            gap: 1rem;
             list-style: none;
-            margin: 1.25rem 0 0;
+            margin: 1.5rem 0 0;
             padding: 0;
         }
         .checklist li {
-            padding: 1rem 1rem 1rem 2.5rem;
+            padding: 1.15rem 1.25rem 1.15rem 3rem;
             background: var(--surface);
             border-radius: var(--radius);
             border: 1px solid var(--border);
             position: relative;
-            font-size: .95rem;
+            font-size: .9375rem;
+            line-height: 1.6;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow .2s, border-color .2s;
+        }
+        .checklist li:hover {
+            box-shadow: var(--shadow-card);
+            border-color: var(--accent);
         }
         .checklist li::before {
             content: "✓";
             position: absolute;
             left: 1rem;
-            top: 1rem;
-            width: 1.25rem;
-            height: 1.25rem;
+            top: 1.15rem;
+            width: 1.5rem;
+            height: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--accent-soft);
             color: var(--accent);
             font-weight: 700;
-            font-size: .75rem;
+            font-size: .8rem;
             border-radius: 50%;
         }
 
         footer {
-            margin-top: 3rem;
-            padding: 2.5rem 0;
+            margin-top: 4rem;
+            padding: 3rem 0;
             background: var(--ink);
-            color: #a3a3a3;
+            color: #9ca3af;
         }
         footer .wrap { padding: 0 1.5rem; }
-        footer p { margin: 0; font-size: .95rem; }
+        footer p { margin: 0; font-size: .9375rem; line-height: 1.65; }
 
         .reveal {
             opacity: 0;
@@ -830,6 +922,7 @@ function esc(string $value): string
 
 <nav class="nav" aria-label="Primär navigering">
     <div class="nav-inner wrap">
+        <a href="#hero" class="nav-brand">Compliance 2026</a>
         <ul>
             <li><a href="#hero">Start</a></li>
             <li><a href="#map">Juridisk karta</a></li>
@@ -873,6 +966,7 @@ function esc(string $value): string
     <section id="map" class="section reveal" aria-labelledby="map-title">
         <div class="wrap">
             <div class="section-head">
+                <p class="section-label">Översikt</p>
                 <h2 id="map-title">Interaktiv juridisk översiktskarta</h2>
                 <p class="lead">Klicka på en domän för att hoppa till detaljerad genomgång med åtgärder, risknivå och ansvar.</p>
             </div>
@@ -927,13 +1021,14 @@ function esc(string $value): string
     <section id="riskzones" class="section reveal" aria-labelledby="risk-title">
         <div class="wrap">
             <div class="section-head">
+                <p class="section-label">Fokusområden</p>
                 <h2 id="risk-title">Riskzoner</h2>
             </div>
             <div class="risk-zones">
             <?php foreach ($riskZones as $zone): ?>
                 <article class="risk-card">
+                    <span class="risk-impact risk-impact-<?= strtolower($zone['impact']) === 'kritisk' ? 'kritisk' : 'high' ?>"><?= esc($zone['impact']) ?></span>
                     <h3><?= esc($zone['title']) ?></h3>
-                    <p><strong>Påverkan:</strong> <?= esc($zone['impact']) ?></p>
                     <p><?= esc($zone['detail']) ?></p>
                 </article>
             <?php endforeach; ?>
