@@ -390,19 +390,29 @@ function esc(string $value): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sveriges kompletta web compliance-karta 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #090d1f;
-            --bg-dark: #111938;
-            --ink: #f6f7ff;
-            --muted: #c6cceb;
-            --accent-a: #7f7bff;
-            --accent-b: #57d6ff;
-            --accent-c: #ffcb5b;
-            --panel: rgba(9, 15, 33, 0.55);
-            --line: rgba(255, 255, 255, 0.14);
-            --shadow: 0 26px 60px rgba(6, 11, 27, 0.4);
-            --easing: cubic-bezier(.22, .8, .26, 1);
+            --bg: #f6f5f1;
+            --surface: #ffffff;
+            --ink: #1a1a1a;
+            --muted: #5c5c5c;
+            --border: #e2e0da;
+            --accent: #0d5c4a;
+            --accent-soft: #e8f2ef;
+            --critical: #b91c1c;
+            --critical-soft: #fef2f2;
+            --high: #b45309;
+            --high-soft: #fffbeb;
+            --medium: #1d4ed8;
+            --medium-soft: #eff6ff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --easing: cubic-bezier(.25, .46, .45, .94);
         }
 
         * { box-sizing: border-box; }
@@ -410,19 +420,11 @@ function esc(string $value): string
         body {
             margin: 0;
             color: var(--ink);
-            font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #070b17 0%, #0f1936 52%, #0c1128 100%);
+            font-family: "DM Sans", system-ui, sans-serif;
+            font-size: 1rem;
+            line-height: 1.65;
+            background: var(--bg);
             overflow-x: hidden;
-        }
-
-        #bg-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            opacity: .5;
         }
 
         .preloader {
@@ -430,18 +432,18 @@ function esc(string $value): string
             inset: 0;
             display: grid;
             place-items: center;
-            background: #050914;
+            background: var(--bg);
             z-index: 9999;
-            transition: opacity .5s var(--easing), visibility .5s var(--easing);
+            transition: opacity .4s var(--easing), visibility .4s var(--easing);
         }
-        .preloader.hidden { opacity: 0; visibility: hidden; }
+        .preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .loader-ring {
-            width: 76px;
-            height: 76px;
-            border-radius: 999px;
-            border: 4px solid rgba(255,255,255,.16);
-            border-top-color: var(--accent-b);
-            animation: spin 1s linear infinite;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            animation: spin .8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -450,230 +452,334 @@ function esc(string $value): string
             top: 0;
             left: 0;
             width: 0;
-            height: 4px;
+            height: 3px;
             z-index: 1200;
-            background: linear-gradient(90deg, var(--accent-a), var(--accent-b), var(--accent-c));
-            box-shadow: 0 0 20px rgba(87, 214, 255, .5);
+            background: var(--accent);
+            transition: width .1s linear;
         }
 
         .nav {
             position: sticky;
             top: 0;
             z-index: 1100;
-            backdrop-filter: blur(12px);
-            background: linear-gradient(90deg, rgba(13, 19, 41, .94), rgba(17, 32, 68, .85));
-            border-bottom: 1px solid rgba(255,255,255,.14);
+            background: rgba(255,255,255,.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: .75rem 1.5rem;
         }
         .nav ul {
             list-style: none;
             margin: 0;
-            padding: .9rem max(1.1rem, 3vw);
+            padding: 0;
             display: flex;
-            gap: .5rem;
-            overflow-x: auto;
+            flex-wrap: wrap;
+            gap: .35rem;
         }
         .nav a {
-            display: inline-flex;
-            padding: .45rem .9rem;
-            border-radius: 999px;
-            border: 1px solid transparent;
+            display: inline-block;
+            padding: .5rem .85rem;
+            border-radius: var(--radius-sm);
             color: var(--muted);
             text-decoration: none;
+            font-size: .9rem;
+            font-weight: 500;
             white-space: nowrap;
-            transition: .28s var(--easing);
+            transition: color .2s, background .2s;
         }
-        .nav a:hover,
+        .nav a:hover {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
         .nav a.active {
-            color: #fff;
-            border-color: rgba(255,255,255,.35);
-            background: rgba(127, 123, 255, .25);
+            color: var(--accent);
+            background: var(--accent-soft);
         }
 
         .wrap {
-            width: 100%;
-            margin: 0;
-            padding: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
         .section {
-            position: relative;
-            width: 100%;
-            padding: clamp(2.8rem, 6vw, 5rem) clamp(1.2rem, 5vw, 6rem);
-            border-top: 1px solid rgba(255,255,255,.08);
+            padding: clamp(3rem, 8vw, 5rem) 0;
         }
-        .section::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: -1;
+        .section:nth-of-type(even) {
+            background: rgba(0,0,0,.02);
         }
-        .section:nth-of-type(odd)::before {
-            background:
-                radial-gradient(circle at 10% 0%, rgba(127, 123, 255, .28), transparent 35%),
-                radial-gradient(circle at 95% 80%, rgba(87, 214, 255, .2), transparent 28%),
-                linear-gradient(135deg, rgba(10, 16, 36, .95), rgba(12, 21, 45, .88));
+        .section-head {
+            margin-bottom: 1.75rem;
         }
-        .section:nth-of-type(even)::before {
-            background:
-                radial-gradient(circle at 85% 0%, rgba(255, 203, 91, .2), transparent 36%),
-                radial-gradient(circle at 5% 75%, rgba(87, 214, 255, .2), transparent 32%),
-                linear-gradient(135deg, rgba(16, 27, 55, .9), rgba(8, 14, 32, .93));
+        .section-label {
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--accent);
+            margin-bottom: .5rem;
+        }
+        h1, h2, h3, h4 {
+            font-family: "Fraunces", Georgia, serif;
+            line-height: 1.25;
+            margin-top: 0;
+            color: var(--ink);
+        }
+        h1 {
+            font-size: clamp(1.85rem, 4.5vw, 3.25rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+            font-weight: 600;
+            margin-bottom: .5rem;
+        }
+        h3 { font-size: 1.25rem; font-weight: 600; }
+        h4 { font-size: 1.05rem; font-weight: 600; }
+        p { margin: 0 0 1rem; }
+        .lead {
+            max-width: 70ch;
+            color: var(--muted);
+            font-size: 1.1rem;
         }
 
         .hero {
-            min-height: min(92vh, 960px);
-            display: flex;
-            align-items: center;
+            padding-top: clamp(3rem, 10vw, 5rem);
+            padding-bottom: clamp(3rem, 8vw, 5rem);
         }
-        .hero-card {
-            max-width: 1100px;
-        }
-        h1, h2, h3, h4 { line-height: 1.2; margin-top: 0; }
-        h1 {
-            font-size: clamp(2rem, 5.6vw, 4.9rem);
-            margin-bottom: .8rem;
-            letter-spacing: -.02em;
-        }
-        h2 {
-            font-size: clamp(1.65rem, 3.3vw, 3rem);
-            margin-bottom: .65rem;
-        }
-
-        p { margin-top: 0; }
-        .lead {
-            max-width: 92ch;
-            color: #e4ebff;
-            font-size: clamp(1.02rem, 1.5vw, 1.2rem);
-        }
-
+        .hero-card { max-width: 42rem; }
         .chip-row {
             display: flex;
             flex-wrap: wrap;
-            gap: .55rem;
-            margin: 1rem 0 1.2rem;
+            gap: .5rem;
+            margin: 1.5rem 0 1rem;
         }
         .chip {
             display: inline-flex;
             align-items: center;
-            padding: .4rem .85rem;
+            padding: .35rem .75rem;
             border-radius: 999px;
-            background: rgba(255,255,255,.12);
-            border: 1px solid rgba(255,255,255,.2);
-            color: #f8f9ff;
-            font-size: .9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            font-size: .85rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
         }
 
         .map-grid,
         .risk-zones {
             display: grid;
             gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            margin-top: 1.4rem;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            margin-top: 1.5rem;
         }
-        .map-node,
-        .risk-card,
-        .domain,
-        .framework,
-        .glass {
-            border: 1px solid var(--line);
-            background: var(--panel);
-            border-radius: 14px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(7px);
+        .map-node {
+            display: block;
+            padding: 1.25rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            color: inherit;
+            transition: box-shadow .2s, border-color .2s, transform .2s;
+            border-left: 4px solid var(--node-color, var(--accent));
         }
-        .map-node,
+        .map-node:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--node-color, var(--accent));
+            transform: translateY(-2px);
+        }
+        .map-node h3 { margin-bottom: .4rem; }
+        .map-node p {
+            margin: 0;
+            font-size: .9rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
         .risk-card {
-            padding: 1rem;
-            transition: transform .2s ease;
+            padding: 1.25rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow .2s;
         }
-        .map-node:hover,
-        .risk-card:hover { transform: translateY(-4px); }
+        .risk-card:hover { box-shadow: var(--shadow-md); }
+        .risk-card h3 { margin-bottom: .5rem; }
 
         .domain {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
             overflow: hidden;
-            border-left: 3px solid var(--domain-color, var(--accent-a));
+            border-left: 4px solid var(--domain-color, var(--accent));
         }
         .domain > header {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: .8rem;
-            padding: .95rem 1rem;
+            gap: 1rem;
+            padding: 1.1rem 1.25rem;
             cursor: pointer;
+            transition: background .2s;
         }
+        .domain > header:hover { background: rgba(0,0,0,.02); }
         .domain .content {
-            padding: 0 1rem 1rem;
+            padding: 0 1.25rem 1.25rem;
+            border-top: 1px solid var(--border);
         }
+        .domain.open .content { display: block; }
+        .domain:not(.open) .content { display: none; }
+        .domain-toggle {
+            padding: .4rem .75rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            font-size: .85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: border-color .2s, color .2s;
+        }
+        .domain-toggle:hover {
+            border-color: var(--domain-color, var(--accent));
+            color: var(--domain-color, var(--accent));
+        }
+
         .framework {
-            padding: .9rem;
-            margin-bottom: .85rem;
+            padding: 1.1rem 0;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border);
         }
+        .framework:last-child { border-bottom: none; padding-bottom: 0; }
+        .framework h4 { margin-bottom: .6rem; }
         .meta {
             display: grid;
-            gap: .4rem;
-            color: #d5dcf7;
-            margin-bottom: .7rem;
+            gap: .35rem;
+            color: var(--muted);
+            font-size: .9rem;
+            margin-bottom: .75rem;
         }
-        .tight { margin: .4rem 0 0; padding-left: 1.2rem; }
-        .risk { color: #ffd8df; }
+        .tight {
+            margin: .5rem 0 0;
+            padding-left: 1.25rem;
+            font-size: .95rem;
+        }
+        .tight li { margin-bottom: .35rem; }
+        .risk {
+            margin: .75rem 0 0;
+            padding: .65rem .85rem;
+            background: var(--critical-soft);
+            border-radius: var(--radius-sm);
+            color: #991b1b;
+            font-size: .9rem;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: .2rem .5rem;
+            border-radius: 4px;
+            font-size: .7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .level-critical { background: var(--critical-soft); color: var(--critical); }
+        .level-high { background: var(--high-soft); color: var(--high); }
+        .level-medium { background: var(--medium-soft); color: var(--medium); }
 
         .section-divider { display: none; }
 
+        .card {
+            padding: 1.25rem 1.5rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        .card .tight { margin-top: .5rem; }
+
+        .matrix-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            box-shadow: var(--shadow-sm);
+        }
         .matrix-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
+            min-width: 640px;
         }
         .matrix-table th,
         .matrix-table td {
-            padding: .72rem;
+            padding: .85rem 1rem;
             text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,.12);
+            border-bottom: 1px solid var(--border);
         }
         .matrix-table th {
-            background: rgba(127,123,255,.2);
-            color: #f9faff;
-            position: sticky;
-            top: 0;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: .9rem;
         }
+        .matrix-table tbody tr:hover { background: rgba(0,0,0,.02); }
+        .matrix-table tbody tr:last-child td { border-bottom: none; }
 
         .checklist {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-            gap: .75rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: .85rem;
             list-style: none;
-            margin: 1rem 0 0;
+            margin: 1.25rem 0 0;
             padding: 0;
         }
         .checklist li {
-            padding: .8rem .9rem .8rem 2.2rem;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,.16);
-            background: rgba(9,15,33,.45);
+            padding: 1rem 1rem 1rem 2.5rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
             position: relative;
+            font-size: .95rem;
         }
         .checklist li::before {
             content: "✓";
             position: absolute;
-            left: .85rem;
-            top: .72rem;
-            color: #82f0aa;
+            left: 1rem;
+            top: 1rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-soft);
+            color: var(--accent);
             font-weight: 700;
+            font-size: .75rem;
+            border-radius: 50%;
         }
 
         footer {
-            padding: 2rem clamp(1.2rem, 5vw, 6rem) 2.8rem;
-            color: #c8cfef;
-            background: rgba(8, 13, 29, .92);
-            border-top: 1px solid rgba(255,255,255,.1);
+            margin-top: 3rem;
+            padding: 2.5rem 0;
+            background: var(--ink);
+            color: #a3a3a3;
         }
+        footer .wrap { padding: 0 1.5rem; }
+        footer p { margin: 0; font-size: .95rem; }
 
         .reveal {
             opacity: 0;
-            transform: translateY(18px);
-            transition: opacity .55s ease, transform .55s ease;
+            transform: translateY(14px);
+            transition: opacity .5s var(--easing), transform .5s var(--easing);
         }
         .reveal.visible {
             opacity: 1;
@@ -683,12 +789,12 @@ function esc(string $value): string
         .word {
             opacity: 0;
             display: inline-block;
-            margin-right: .2em;
-            animation: rise .48s ease forwards;
-            animation-delay: calc(var(--word-index) * 60ms);
+            margin-right: .25em;
+            animation: rise .4s ease forwards;
+            animation-delay: calc(var(--word-index) * 50ms);
         }
         @keyframes rise {
-            from { transform: translateY(12px); opacity: 0; }
+            from { transform: translateY(8px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         .word.cursor::after {
@@ -696,24 +802,23 @@ function esc(string $value): string
             display: inline-block;
             width: 2px;
             height: 1em;
-            background: var(--accent-b);
-            margin-left: .12em;
+            background: var(--accent);
+            margin-left: .15em;
             animation: blink 1s steps(1,end) infinite;
-            vertical-align: -0.12em;
+            vertical-align: -0.15em;
         }
         @keyframes blink { 50% { opacity: 0; } }
 
         @media (max-width: 780px) {
-            .hero { min-height: auto; }
-            .section { padding: 2.3rem 1rem; }
-            .map-grid,
-            .risk-zones,
-            .checklist { grid-template-columns: 1fr; }
-            .matrix-table { min-width: 640px; }
+            .section { padding: 2rem 0; }
+            .wrap { padding: 0 1rem; }
+            .nav-inner { padding: .6rem 1rem; }
+            .map-grid, .risk-zones, .checklist { grid-template-columns: 1fr; }
+            .matrix-table { min-width: 560px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation: none !important; transition: none !important; }
+            *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
             .reveal { opacity: 1; transform: none; }
             html { scroll-behavior: auto; }
         }
@@ -721,27 +826,30 @@ function esc(string $value): string
 </head>
 <body>
 <div class="preloader" id="preloader" aria-hidden="true"><div class="loader-ring"></div></div>
-<canvas id="bg-canvas" aria-hidden="true"></canvas>
 <div class="progress" id="scroll-progress" aria-hidden="true"></div>
 
 <nav class="nav" aria-label="Primär navigering">
-    <ul>
-        <li><a href="#hero">Start</a></li>
-        <li><a href="#map">Juridisk karta</a></li>
-        <li><a href="#domains">Huvudkategorier</a></li>
-        <li><a href="#riskzones">Riskzoner</a></li>
-        <li><a href="#actions">Tekniska åtgärder</a></li>
-        <li><a href="#agency">Byråansvar</a></li>
-        <li><a href="#matrix">Compliance-matris</a></li>
-        <li><a href="#checklist">Checklista</a></li>
-        <li><a href="#summary">Visuell sammanfattning</a></li>
-    </ul>
+    <div class="nav-inner wrap">
+        <ul>
+            <li><a href="#hero">Start</a></li>
+            <li><a href="#map">Juridisk karta</a></li>
+            <li><a href="#domains">Huvudkategorier</a></li>
+            <li><a href="#riskzones">Riskzoner</a></li>
+            <li><a href="#actions">Åtgärder</a></li>
+            <li><a href="#agency">Byråansvar</a></li>
+            <li><a href="#matrix">Matris</a></li>
+            <li><a href="#checklist">Checklista</a></li>
+            <li><a href="#summary">Sammanfattning</a></li>
+        </ul>
+    </div>
 </nav>
 
-<main class="wrap">
-    <section id="hero" class="hero reveal section-shell" aria-labelledby="hero-title">
-        <div class="hero-card" data-parallax="0.08">
-            <h1 id="hero-title" data-animated-headline="Komplett juridisk och teknisk web compliance för Sverige 2026">Komplett juridisk och teknisk web compliance för Sverige 2026</h1>
+<main>
+    <section id="hero" class="section hero reveal" aria-labelledby="hero-title">
+        <div class="wrap">
+            <div class="hero-card" data-parallax="0.08">
+                <p class="section-label">Web compliance 2026</p>
+                <h1 id="hero-title" data-animated-headline="Komplett juridisk och teknisk web compliance för Sverige 2026">Komplett juridisk och teknisk web compliance för Sverige 2026</h1>
             <p>
                 Denna single-page-resurs samlar nationell svensk rätt, direktverkande EU-regler och de viktigaste digitala
                 regelverken 2024–2026 i ett praktiskt byggperspektiv för webbutvecklare. Fokus ligger på konkreta implementationer,
@@ -755,40 +863,46 @@ function esc(string $value): string
                 <span class="chip">WCAG, DOS, EAA</span>
                 <span class="chip">PSD2, PCI DSS, avtal/IP/OSS</span>
             </div>
-            <p><strong>Senast uppdaterad:</strong> <?= esc($updatedAt) ?>.</p>
+                <p><strong>Senast uppdaterad:</strong> <?= esc($updatedAt) ?>.</p>
+            </div>
         </div>
     </section>
 
     <div class="section-divider" aria-hidden="true"></div>
 
-    <section id="map" class="section reveal section-shell shell-contrast" aria-labelledby="map-title">
-        <h2 id="map-title">Interaktiv juridisk översiktskarta</h2>
-        <p class="lead">Klicka på en domän för att hoppa till detaljerad genomgång med åtgärder, risknivå och ansvar.</p>
-        <div class="map-grid">
+    <section id="map" class="section reveal" aria-labelledby="map-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="map-title">Interaktiv juridisk översiktskarta</h2>
+                <p class="lead">Klicka på en domän för att hoppa till detaljerad genomgång med åtgärder, risknivå och ansvar.</p>
+            </div>
+            <div class="map-grid">
             <?php foreach ($domains as $domain): ?>
-                <a class="map-node glass" href="#<?= esc($domain['id']) ?>" style="--node-color: <?= esc($domain['color']) ?>; text-decoration:none; color: inherit;">
+                <a class="map-node" href="#<?= esc($domain['id']) ?>" style="--node-color: <?= esc($domain['color']) ?>; text-decoration:none; color: inherit;">
                     <h3><?= esc($domain['title']) ?></h3>
                     <p><?= esc($domain['summary']) ?></p>
                 </a>
             <?php endforeach; ?>
+            </div>
         </div>
     </section>
 
-    <div class="section-divider" aria-hidden="true"></div>
-
-    <section id="domains" class="section reveal section-shell" aria-labelledby="domain-title">
-        <h2 id="domain-title">Huvudkategorier och underkategorier</h2>
-        <p class="lead">Varje regelverk nedan visar <em>vad det är</em>, <em>varför det påverkar utvecklaren</em>, <em>tekniska åtgärder</em> och <em>juridisk risk</em>.</p>
-        <?php foreach ($domains as $domain): ?>
-            <article id="<?= esc($domain['id']) ?>" class="domain glass reveal" style="--domain-color: <?= esc($domain['color']) ?>;">
+    <section id="domains" class="section reveal" aria-labelledby="domain-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="domain-title">Huvudkategorier och underkategorier</h2>
+                <p class="lead">Varje regelverk visar <em>vad det är</em>, <em>varför det påverkar utvecklaren</em>, <em>tekniska åtgärder</em> och <em>juridisk risk</em>.</p>
+            </div>
+        <?php foreach ($domains as $i => $domain): ?>
+            <article id="<?= esc($domain['id']) ?>" class="domain reveal <?= $i === 0 ? 'open' : '' ?>" style="--domain-color: <?= esc($domain['color']) ?>;">
                 <header>
                     <h3><?= esc($domain['title']) ?></h3>
-                    <span class="chip" style="border-color: <?= esc($domain['color']) ?>; color: <?= esc($domain['color']) ?>;">Expandera</span>
+                    <button type="button" class="domain-toggle" aria-expanded="<?= $i === 0 ? 'true' : 'false' ?>"><?= $i === 0 ? 'Kollapsa' : 'Expandera' ?></button>
                 </header>
                 <div class="content">
                     <?php foreach ($domain['frameworks'] as $framework): ?>
                         <section class="framework">
-                            <h4><?= esc($framework['name']) ?></h4>
+                            <h4><?= esc($framework['name']) ?> <span class="level-badge level-<?= esc($framework['level']) ?>"><?= esc($framework['level']) ?></span></h4>
                             <div class="meta">
                                 <span><strong>Beskrivning:</strong> <?= esc($framework['description']) ?></span>
                                 <span><strong>Påverkan:</strong> <?= esc($framework['why']) ?></span>
@@ -805,26 +919,34 @@ function esc(string $value): string
                 </div>
             </article>
         <?php endforeach; ?>
+        </div>
     </section>
 
     <div class="section-divider" aria-hidden="true"></div>
 
-    <section id="riskzones" class="section reveal section-shell shell-contrast" aria-labelledby="risk-title">
-        <h2 id="risk-title">Riskzoner (visuellt markerade)</h2>
-        <div class="risk-zones">
+    <section id="riskzones" class="section reveal" aria-labelledby="risk-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="risk-title">Riskzoner</h2>
+            </div>
+            <div class="risk-zones">
             <?php foreach ($riskZones as $zone): ?>
-                <article class="risk-card glass">
+                <article class="risk-card">
                     <h3><?= esc($zone['title']) ?></h3>
                     <p><strong>Påverkan:</strong> <?= esc($zone['impact']) ?></p>
                     <p><?= esc($zone['detail']) ?></p>
                 </article>
             <?php endforeach; ?>
+            </div>
         </div>
     </section>
 
-    <section id="actions" class="section reveal section-shell" aria-labelledby="action-title">
-        <h2 id="action-title">Avancerad compliance-nivå: tekniska åtgärdsmönster</h2>
-        <div class="glass" style="padding: 1rem 1.2rem;">
+    <section id="actions" class="section reveal" aria-labelledby="action-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="action-title">Tekniska åtgärdsmönster</h2>
+            </div>
+            <div class="card">
             <ul class="tight">
                 <li><strong>Privacy by Design:</strong> default-off tracking, dataminimerade formulär, pseudonymisering och per-feature DPIA-trigger.</li>
                 <li><strong>Secure SDLC:</strong> hotmodellering, SAST/DAST, code review-policy, signerade releaser och sårbarhets-SLA.</li>
@@ -833,23 +955,31 @@ function esc(string $value): string
                 <li><strong>Moln & tredjeland:</strong> datalokaliseringskontroller, underbiträdesövervakning, krypteringsnycklar under kundkontroll.</li>
                 <li><strong>Driftansvar:</strong> backup/restore-test, failover-övningar, least privilege i drift och incidentövningar med juridikteam.</li>
             </ul>
+            </div>
         </div>
     </section>
 
-    <section id="agency" class="section reveal section-shell shell-contrast" aria-labelledby="agency-title">
-        <h2 id="agency-title">Byrå- och avtalsansvar</h2>
-        <div class="glass" style="padding: 1rem 1.2rem;">
+    <section id="agency" class="section reveal" aria-labelledby="agency-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="agency-title">Byrå- och avtalsansvar</h2>
+            </div>
+            <div class="card">
             <ul class="tight">
                 <?php foreach ($agencyResponsibilities as $item): ?>
                     <li><?= esc($item) ?></li>
                 <?php endforeach; ?>
             </ul>
+            </div>
         </div>
     </section>
 
-    <section id="matrix" class="section reveal section-shell" aria-labelledby="matrix-title">
-        <h2 id="matrix-title">Compliance-matris</h2>
-        <div class="glass" style="padding: .4rem; overflow-x: auto;">
+    <section id="matrix" class="section reveal" aria-labelledby="matrix-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="matrix-title">Compliance-matris</h2>
+            </div>
+            <div class="matrix-wrap">
             <table class="matrix-table">
                 <thead>
                     <tr>
@@ -870,32 +1000,43 @@ function esc(string $value): string
                 <?php endforeach; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </section>
 
-    <section id="checklist" class="section reveal section-shell shell-contrast" aria-labelledby="checklist-title">
-        <h2 id="checklist-title">Fullständig utvecklar-checklista</h2>
-        <ul class="checklist" aria-label="Utvecklarchecklista">
+    <section id="checklist" class="section reveal" aria-labelledby="checklist-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="checklist-title">Fullständig utvecklar-checklista</h2>
+            </div>
+            <ul class="checklist" aria-label="Utvecklarchecklista">
             <?php foreach ($checklist as $point): ?>
                 <li><?= esc($point) ?></li>
             <?php endforeach; ?>
         </ul>
+        </div>
     </section>
 
-    <section id="summary" class="section reveal section-shell" aria-labelledby="summary-title">
-        <h2 id="summary-title">Visuell sammanfattning av hela regelstrukturen</h2>
-        <div class="glass" style="padding: 1rem 1.2rem;">
+    <section id="summary" class="section reveal" aria-labelledby="summary-title">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 id="summary-title">Sammanfattning av regelstrukturen</h2>
+            </div>
+            <div class="card">
             <p class="lead">Den praktiska prioriteringsordningen för 2026: <strong>(1) dataskydd + cookies</strong> → <strong>(2) säkerhet/NIS2 + incidentberedskap</strong> → <strong>(3) konsument/e-handel</strong> → <strong>(4) AI/DSA/dataregler</strong> → <strong>(5) tillgänglighet och sektorskrav</strong> → <strong>(6) avtal/IP/licenser</strong>. Alla områden måste dokumenteras med tekniskt bevismaterial.</p>
             <div class="chip-row">
                 <span class="chip">Juridik + teknik + UX måste designas tillsammans.</span>
                 <span class="chip">Ingen compliance utan loggbar beviskedja.</span>
                 <span class="chip">Policytext utan implementation är inte efterlevnad.</span>
             </div>
+            </div>
         </div>
     </section>
 
     <footer>
+        <div class="wrap">
         <p>Detta är ett arbetsverktyg för utvecklingsteam, jurister och byråer i svenska kundprojekt 2026. Bedöm alltid kundens branschspecifika krav (t.ex. vård, finans, offentlig sektor, edtech, medtech, kritisk infrastruktur) innan go-live.</p>
+        </div>
     </footer>
 </main>
 
@@ -962,46 +1103,14 @@ function esc(string $value): string
     // Expand/collapse for domain sections.
     document.querySelectorAll('.domain').forEach((domain) => {
         const header = domain.querySelector('header');
+        const btn = domain.querySelector('.domain-toggle');
+        if (!header || !btn) return;
         header.addEventListener('click', () => {
-            domain.classList.toggle('open');
-            header.querySelector('.chip').textContent = domain.classList.contains('open') ? 'Kollapsa' : 'Expandera';
+            const isOpen = domain.classList.toggle('open');
+            btn.textContent = isOpen ? 'Kollapsa' : 'Expandera';
+            btn.setAttribute('aria-expanded', isOpen);
         });
     });
-
-    // Subtle animated background particles.
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let w = 0, h = 0;
-    const dots = Array.from({ length: 55 }, () => ({
-        x: Math.random(), y: Math.random(),
-        r: Math.random() * 2 + 0.4,
-        dx: (Math.random() - 0.5) * 0.0007,
-        dy: (Math.random() - 0.5) * 0.0007,
-    }));
-
-    function resize() {
-        w = canvas.width = window.innerWidth * devicePixelRatio;
-        h = canvas.height = window.innerHeight * devicePixelRatio;
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, w, h);
-        dots.forEach((d) => {
-            d.x += d.dx;
-            d.y += d.dy;
-            if (d.x < 0 || d.x > 1) d.dx *= -1;
-            if (d.y < 0 || d.y > 1) d.dy *= -1;
-            ctx.beginPath();
-            ctx.arc(d.x * w, d.y * h, d.r * devicePixelRatio, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(121, 242, 255, 0.28)';
-            ctx.fill();
-        });
-        requestAnimationFrame(draw);
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-    draw();
 })();
 </script>
 </body>
